@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrendBot - AI Crypto Analytics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Advanced cryptocurrency trend analysis with AI predictions, real-time data and beautiful modern UI">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="css/style.css" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
+  
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/prediction-modal.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+  
+  <!-- Non-critical CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" media="print" onload="this.media='all'">
+  
+  <!-- Chart.js with defer loading -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  
+  <!-- Performance optimizations -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="app-container">
+  <!-- Header - Modall Style -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fab fa-bitcoin"></i>
+        </div>
+        <div class="logo-text">
+          <h1>TrendBot</h1>
+          <span>AI Crypto Analytics</span>
+        </div>
+      </div>
+      
+      <div class="header-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="totalMarketCap">$2.1T</span>
+          <span class="stat-label">Market Cap</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="totalVolume">$89B</span>
+          <span class="stat-label">24h Volume</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="btcDominance">42.3%</span>
+          <span class="stat-label">BTC Dominance</span>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span>Live Data</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard - Modall Style -->
+  <main class="dashboard">
+    <!-- Sidebar - Modall Style -->
+    <aside class="sidebar">
+      <!-- Navigation Tabs -->
+      <div class="nav-section">
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-tab="analysis">
+            <i class="fas fa-chart-line"></i>
+            <span>Analysis</span>
+          </button>
+          <button class="nav-tab" data-tab="predictions">
+            <i class="fas fa-brain"></i>
+            <span>AI Predictions</span>
+          </button>
+          <button class="nav-tab" data-tab="portfolio">
+            <i class="fas fa-briefcase"></i>
+            <span>Portfolio</span>
+          </button>
+          <button class="nav-tab" data-tab="alerts">
+            <i class="fas fa-bell"></i>
+            <span>Alerts</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content-container">
+        <!-- Analysis Tab -->
+        <div id="analysisTab" class="tab-content active">
+          <!-- Smart Search -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-search"></i>
+              <h3>Smart Search</h3>
+            </div>
+            <div class="search-container">
+              <div class="search-input-wrapper">
+                <input type="text" id="cryptoSearch" class="search-input" placeholder="Search cryptocurrencies..." autocomplete="off">
+                <button id="searchCrypto" class="search-btn" aria-label="Search">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+              <div id="searchSuggestions" class="search-suggestions" role="listbox"></div>
+            </div>
+          </div>
+
+          <!-- Analysis Controls -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-sliders-h"></i>
+              <h3>Analysis Controls</h3>
+            </div>
+            <div class="controls-grid">
+              <div class="control-group">
+                <label for="timeframe">Timeframe</label>
+                <select id="timeframe" class="control-select">
+                  <option value="1h">1 Hour</option>
+                  <option value="24h" selected>24 Hours</option>
+                  <option value="7d">7 Days</option>
+                  <option value="30d">30 Days</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="market">Market Category</label>
+                <select id="market" class="control-select">
+                  <option value="all">All Markets</option>
+                  <option value="defi">DeFi</option>
+                  <option value="nft">NFT</option>
+                  <option value="gaming">Gaming</option>
+                  <option value="layer-1">Layer 1</option>
+                  <option value="layer-2">Layer 2</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="limitRange">Results Limit</label>
+                <div class="range-container">
+                  <input type="range" id="limitRange" class="control-range" min="5" max="50" value="10">
+                  <span id="limitValue" class="range-value">10</span>
+                </div>
+              </div>
+              <div class="control-group">
+                <label for="sortBy">Sort By</label>
+                <select id="sortBy" class="control-select">
+                  <option value="market_cap">Market Cap</option>
+                  <option value="volume">Volume</option>
+                  <option value="price_change">Price Change</option>
+                </select>
+              </div>
+            </div>
+            <div class="control-actions">
+              <button id="analyzeTrends" class="btn btn-primary">
+                <i class="fas fa-chart-line"></i>
+                <span>Analyze Trends</span>
+              </button>
+              <button id="showGraphsBtn" class="btn btn-secondary">
+                <i class="fas fa-chart-area"></i>
+                <span>View Charts</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Trending Coins -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-fire"></i>
+              <h3>Trending Now</h3>
+            </div>
+            <div id="trendingCryptos" class="trending-list">
+              <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-fire" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Loading trending cryptocurrencies...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Market Sentiment -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-brain"></i>
+              <h3>Market Sentiment</h3>
+            </div>
+            <div class="fear-greed-container">
+              <div class="fear-greed-meter">
+                <div class="meter-circle">
+                  <div class="meter-content">
+                    <div class="meter-value" id="fearGreedValue">--</div>
+                    <div class="meter-label" id="fearGreedLabel">Loading...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Predictions Tab -->
+        <div id="predictionsTab" class="tab-content">
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-brain"></i>
+              <h3>AI Predictions</h3>
+            </div>
+            <div class="controls-grid">
+              <div class="control-group">
+                <label for="predictionTimeframe">Prediction Timeframe</label>
+                <select id="predictionTimeframe" class="control-select">
+                  <option value="1d">1 Day</option>
+                  <option value="3d">3 Days</option>
+                  <option value="7d" selected>7 Days</option>
+                  <option value="14d">14 Days</option>
+                  <option value="30d">30 Days</option>
+                </select>
+              </div>
+            </div>
+            <div class="control-actions">
+              <button id="generatePredictions" class="btn btn-primary">
+                <i class="fas fa-brain"></i>
+                <span>Generate Predictions</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-crystal-ball"></i>
+              <h3>Predictions Overview</h3>
+            </div>
+            <div id="predictionsOverview">
+              <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-brain" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Click "Generate Predictions" to create AI-powered market predictions, or use the "Predict" button on individual cryptocurrency cards for detailed analysis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Tab -->
+        <div id="portfolioTab" class="tab-content">
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-briefcase"></i>
+              <h3>My Portfolio</h3>
+            </div>
+            <div class="portfolio-summary">
+              <div class="portfolio-stat">
+                <div class="stat-label">Total Value</div>
+                <div class="stat-value" id="portfolioTotalValue">$0.00</div>
+              </div>
+              <div class="portfolio-stat">
+                <div class="stat-label">24h Change</div>
+                <div class="stat-value" id="portfolioTotalChange">+0.00%</div>
+              </div>
+              <div class="portfolio-stat">
+                <div class="stat-label">Holdings</div>
+                <div class="stat-value" id="portfolioHoldingsCount">0</div>
+              </div>
+            </div>
+            <div class="control-actions">
+              <button id="addHoldingBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Add Holding</span>
+              </button>
+              <button id="exportPortfolioBtn" class="btn btn-secondary">
+                <i class="fas fa-download"></i>
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-list"></i>
+              <h3>Holdings</h3>
+            </div>
+            <div id="portfolioHoldings" class="portfolio-holdings">
+              <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-briefcase" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Portfolio feature coming soon! Track your crypto investments with detailed analytics.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts Tab -->
+        <div id="alertsTab" class="tab-content">
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-bell"></i>
+              <h3>Price Alerts</h3>
+            </div>
+            <div class="control-actions">
+              <button id="addAlertBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Add Alert</span>
+              </button>
+            </div>
+            <div id="priceAlerts" class="price-alerts">
+              <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-bell" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Price alerts feature coming soon! Get notified when your favorite cryptos hit target prices.</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-header">
+              <i class="fas fa-trophy"></i>
+              <h3>Top Gainers/Losers</h3>
+            </div>
+            <div class="gainers-losers-tabs">
+              <button class="gl-tab active" data-type="gainers">Gainers</button>
+              <button class="gl-tab" data-type="losers">Losers</button>
+            </div>
+            <div id="gainersLosersList" class="gainers-losers-list">
+              <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Loading gainers and losers...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content - Modall Style -->
+    <section class="main-content">
+      <!-- Market Overview -->
+      <div class="market-overview">
+        <div class="overview-card">
+          <div class="overview-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div class="overview-content">
+            <div class="overview-value" id="totalCoins">13,456</div>
+            <div class="overview-label">Total Coins</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="overview-content">
+            <div class="overview-value" id="activeExchanges">542</div>
+            <div class="overview-label">Active Exchanges</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="overview-content">
+            <div class="overview-value" id="gainersCount">67%</div>
+            <div class="overview-label">Gainers</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-icon">
+            <i class="fas fa-fire"></i>
+          </div>
+          <div class="overview-content">
+            <div class="overview-value" id="fearGreedIndex">72</div>
+            <div class="overview-label">Fear & Greed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Header -->
+      <div class="results-header">
+        <div class="results-title">
+          <h2>Market Analysis</h2>
+          <div class="last-updated">
+            <i class="fas fa-clock"></i>
+            <span id="lastUpdatedTime">Just now</span>
+          </div>
+        </div>
+        <div class="results-actions">
+          <div class="view-toggle">
+            <button class="view-toggle-btn active" data-view="grid" aria-label="Grid view">
+              <i class="fas fa-th"></i>
+            </button>
+            <button class="view-toggle-btn" data-view="list" aria-label="List view">
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-container" style="display:none;" role="status" aria-live="polite">
+        <div class="loading-spinner"></div>
+        <h3 class="loading-text">Analyzing Market Data</h3>
+        <p class="loading-description">Processing real-time cryptocurrency trends...</p>
+        <div class="loading-progress">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="error-container" style="display:none;" role="alert">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3 class="error-title">Unable to Load Data</h3>
+        <p class="error-message" id="errorMessage">Please check your connection and try again.</p>
+        <button id="retryBtn" class="btn btn-primary">
+          <i class="fas fa-redo"></i>
+          <span>Retry Analysis</span>
+        </button>
+      </div>
+
+      <!-- Trends Display -->
+      <div id="trendsDisplay">
+        <div id="trendsGrid" class="trends-grid" role="main"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chart Modal -->
+  <div id="graphModal" class="modal" role="dialog" aria-labelledby="graphModalTitle" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="graphModalTitle">Price Chart</h3>
+        <button id="closeModalBtn" class="modal-close" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="chart-controls">
+          <div class="control-group">
+            <label for="graphTimeframe">Chart Timeframe</label>
+            <select id="graphTimeframe" class="control-select">
+              <option value="1">1 Day</option>
+              <option value="7" selected>7 Days</option>
+              <option value="30">30 Days</option>
+              <option value="90">90 Days</option>
+              <option value="180">180 Days</option>
+              <option value="365">1 Year</option>
+              <option value="max">All Time</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="priceChartCanvas" aria-label="Price chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/prediction-engine.js"></script>
+<script src="js/performance-optimizer.js"></script>
+<!-- Load cache manager first, then API manager (which depends on cache), then main script -->
+<script src="js/cache.js"></script>
+<script src="js/api.js"></script>
+<script type="module" src="js/script.js"></script>
+</body>
+</html>
