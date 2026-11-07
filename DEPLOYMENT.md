@@ -79,7 +79,7 @@ your-repository/
 │   ├── prediction-engine.js # ✅ AI predictions
 │   └── performance-optimizer.js # ✅ Performance
 ├── README.md               # ✅ Documentation
-└── DEPLOYMENT.md           # ✅ This guide
+└── DEPLOYMENT.md           # ✅ This Guide
 ```
 
 ## ⚙️ Configuration for GitHub Pages
