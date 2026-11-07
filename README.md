@@ -15,7 +15,7 @@ A modern, responsive cryptocurrency analytics dashboard with AI-powered predicti
 
 ## 🌐 Live Demo
 
-Visit the live demo: [https://yourusername.github.io/trendbot-crypto-dashboard](https://yourusername.github.io/trendbot-crypto-dashboard)
+Visit the live demo: [https://duckperfect.github.io/trendbot-crypto-dashboard](https://duckperfect.github.io/trendbot-crypto-dashboard)
 
 ## 📱 Screenshots
 
@@ -41,7 +41,7 @@ Visit the live demo: [https://yourusername.github.io/trendbot-crypto-dashboard](
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/trendbot-crypto-dashboard.git
+   git clone https://github.com/duckperfect/trendbot-crypto-dashboard.git
    cd trendbot-crypto-dashboard
    ```
 
@@ -61,7 +61,7 @@ Visit the live demo: [https://yourusername.github.io/trendbot-crypto-dashboard](
    - Click "Save"
 
 3. **Access your site**
-   - Your site will be available at: `https://yourusername.github.io/repository-name`
+   - Your site will be available at: `https://duckperfect.github.io/repository-name`
    - It may take a few minutes to deploy
 
 ## 📁 Project Structure
@@ -180,7 +180,7 @@ This application is for educational and informational purposes only. The AI pred
 
 If you have any questions or need help, please:
 
-1. Check the [Issues](https://github.com/yourusername/trendbot-crypto-dashboard/issues) page
+1. Check the [Issues](https://github.com/duckperfect/trendbot-crypto-dashboard/issues) page
 2. Create a new issue if your question isn't answered
 3. Provide as much detail as possible about your problem
 
